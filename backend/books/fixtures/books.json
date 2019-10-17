@@ -1,0 +1,26 @@
+[
+  {
+    "model": "books.Book",
+    "pk": 1,
+    "fields": {
+      "title": "Java How To Program",
+      "publisher": "Pearson",
+      "author": "Paul Deitel and Harvey Deitel",
+      "num_of_pages": "1290",
+      "created": "2019-10-16 10:08:32",
+      "modified": "2019-10-16 10:08:32"
+    }
+  },
+  {
+    "model": "books.Book",
+    "pk": 2,
+    "fields": {
+      "title": "Learning Python",
+      "publisher": "Oreilly",
+      "author": "Mark Lutz",
+      "num_of_pages": "1330",
+      "created": "2019-10-16 10:09:10",
+      "modified": "2019-10-16 10:09:10"
+    }
+  }
+]
