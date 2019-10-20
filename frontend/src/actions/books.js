@@ -36,9 +36,16 @@ export const getBook = id => {
 
 export const addBook = book => {
   return dispatch => {
+    const data = appendToFormData(book);
     axios
-      .post("http://127.0.0.1:8000/books/", book)
+      .post("http://127.0.0.1:8000/books/", data, {
+        headers: {
+          "Content-Type": "multipart/form-data"
+        }
+      })
       .then(res => {
+        console.log("addBook");
+        console.log(res.data);
         dispatch({ type: ADD_BOOK, payload: res.data });
       })
       .catch(err => {
@@ -48,12 +55,14 @@ export const addBook = book => {
 };
 
 export const updateBook = book => {
-  console.log("update action: ");
-
-  console.log(book);
   return dispatch => {
+    const data = appendToFormData(book);
     axios
-      .put(`http://127.0.0.1:8000/${book.id}`, book)
+      .put(`http://127.0.0.1:8000/${book.id}`, data, {
+        headers: {
+          "Content-Type": "multipart/form-data"
+        }
+      })
       .then(res => {
         dispatch({ type: UPDATE_BOOK, payload: res.data });
       })
@@ -74,4 +83,25 @@ export const deleteBook = id => {
         console.log("There was an error deleting book from the server");
       });
   };
+};
+
+const appendToFormData = book => {
+  const data = new FormData();
+  for (let [key, value] of Object.entries(book)) {
+    // Only empty string can be used as value for an image field
+    // if the user did not change or add an image to the form.
+    if (key === "image" && !value) {
+      data.append(key, "");
+    } else if (
+      key === "image" &&
+      value &&
+      value.type &&
+      value.type.split("/")[0] === "image"
+    ) {
+      data.append(key, value);
+    } else {
+      data.append(key, value);
+    }
+  }
+  return data;
 };

@@ -16,7 +16,8 @@ export const rootReducer = (state = initialState, action) => {
     case GET_BOOKS:
       return {
         ...state,
-        books: action.payload
+        books: action.payload,
+        book: null
       };
     case GET_BOOK:
       return {

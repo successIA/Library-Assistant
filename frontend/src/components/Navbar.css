@@ -1,0 +1,66 @@
+nav form .search-wrapper {
+  position: relative;
+}
+
+.search-icon {
+  position: absolute;
+  top: 9.8px;
+  left: 6.5px;
+  font-size: 0.82em;
+  color: #6c757d;
+}
+
+.search-icon:focus {
+  color: black;
+}
+
+.search-input {
+  padding-left: 25px;
+}
+
+.search-wrapper ul {
+  position: absolute;
+  right: 7px;
+  background-color: #fff;
+  margin-top: 4px;
+  box-shadow: 0 4px 8px 0px rgba(0, 0, 0, 0.2);
+  width: 380px;
+  z-index: 100;
+  border-radius: 3px;
+  padding: 12px 0px;
+}
+
+.search-wrapper ul li {
+  list-style-type: none;
+}
+
+.search-wrapper ul li a {
+  display: inline-block;
+  width: 100%;
+  cursor: pointer;
+  color: #333;
+  padding: 8px;
+  font-size: 0.9em;
+  text-decoration: none;
+}
+
+.search-wrapper ul li a:hover,
+a:focus,
+a:active {
+  background-color: rgba(189, 180, 1891, 0.2);
+}
+
+.book-table tbody tr:last-child {
+  border-bottom: 1px solid gainsboro;
+}
+
+.above-table {
+  margin-bottom: -13px !important;
+}
+.above-table a,
+.above-table form input {
+  height: 35px !important;
+}
+.above-table a {
+  padding-top: 4px !important;
+}

@@ -7,5 +7,6 @@ class Book(models.Model):
     author = models.CharField(max_length=32, blank=True)
     description = models.TextField(blank=True)
     num_of_pages = models.IntegerField(default=0)
+    image = models.ImageField(blank=True)
     created = models.DateTimeField(auto_now_add=True)
     modified = models.DateTimeField(auto_now=True)

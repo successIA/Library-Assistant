@@ -28,8 +28,8 @@ ReactDOM.render(
       <div className="container">
         <Switch>
           <Route exact path="/" component={App} />
-          <Route exact path="/books/:book_id" component={Book} />
           <Route exact path="/admin/books" component={BookTable} />
+          <Route exact path="/books/:book_id" component={Book} />
           <Route exact path="/admin/books/:book_id/edit" component={AddBook} />
           <Route exact path="/admin/books/add" component={AddBook} />
         </Switch>
