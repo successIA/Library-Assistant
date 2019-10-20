@@ -25,9 +25,15 @@ export class BookList extends Component {
               return (
                 <li key={book.id} className="media mb-4">
                   <img
-                    src="https://via.placeholder.com/150x200"
+                    src={
+                      book.image
+                        ? book.image
+                        : "https://via.placeholder.com/150x200"
+                    }
                     className="mr-3"
                     alt="..."
+                    width="150"
+                    height="200"
                   />
                   <div className="media-body">
                     <h5 className="mt-0">

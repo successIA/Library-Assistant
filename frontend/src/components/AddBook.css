@@ -1,0 +1,17 @@
+form img {
+  border-top-left-radius: 3px;
+  border-top-right-radius: 3px;
+}
+.fake-img-btn {
+  width: 150px;
+  border-radius: 0;
+  border-color: (0, 0, 0, 0);
+  border-top: black;
+  border-bottom-left-radius: 3px;
+  border-bottom-right-radius: 3px;
+  /* background-color: rgba(52, 58, 64, 0.9); */
+}
+
+.fake-img-btn i {
+  margin-right: 5px;
+}
