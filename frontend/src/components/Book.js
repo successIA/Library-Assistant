@@ -77,7 +77,7 @@ export class Book extends Component {
 
 const mapStateToProps = state => {
   return {
-    book: state.book
+    book: state.bookReducer.book
   };
 };
 

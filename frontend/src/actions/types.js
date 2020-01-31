@@ -1,5 +1,25 @@
+// BOOK
 export const GET_BOOKS = "GET_BOOKS";
+export const BOOK_COUNT = "BOOK_COUNT";
+export const BOOK_NEXT = "BOOK_NEXT";
+export const BOOK_PREVIOUS = "BOOK_PREVIOUS";
 export const GET_BOOK = "GET_BOOK";
 export const ADD_BOOK = "ADD_BOOK";
 export const UPDATE_BOOK = "UPDATE_BOOK";
 export const DELETE_BOOK = "DELETE_BOOK";
+export const DELETE_BOOK_SUCCESS = "DELETE_BOOK_SUCCESS";
+export const DELETE_BOOK_FAILURE = "DELETE_BOOK_FAILURE";
+
+// ALERT
+export const ALERT_MESSAGE = "ALERT_MESSAGE";
+export const ALERT_ERROR = "ALERT_ERROR";
+
+// AUTHENTICATION
+export const REGISTER_SUCCESS = "REGISTER_SUCCESS";
+export const REGISTER_FAIL = "REGISTER_FAIL";
+export const USER_LOADED = "USER_LOADED";
+export const USER_LOADING_FAIL = "USER_LOADING_FAIL";
+export const LOGOUT_SUCCESS = "LOGOUT_SUCCESS";
+export const LOGOUT_FAIL = "LOGOUT_FAIL";
+export const LOGIN_SUCCESS = "LOGIN_SUCCESS";
+export const LOGIN_FAIL = "LOGIN_FAIL";

@@ -5,13 +5,9 @@ import App from "./App";
 import * as serviceWorker from "./serviceWorker";
 import { createStore, applyMiddleware, compose } from "redux";
 import thunk from "redux-thunk";
-import { rootReducer } from "./reducers/rootReducer";
 import { Provider } from "react-redux";
-import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
-import Book from "./components/Book";
-import Navbar from "./components/Navbar";
-import BookTable from "./components/BookTable";
-import AddBook from "./components/AddBook";
+import rootReducer from "./reducers";
+import { loadUser } from "./actions/auth";
 
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 
@@ -20,21 +16,13 @@ export const store = createStore(
   composeEnhancers(applyMiddleware(thunk))
 );
 
+if (localStorage.getItem("token")) {
+  store.dispatch(loadUser());
+}
+
 ReactDOM.render(
   <Provider store={store}>
-    <Router>
-      <Navbar />
-
-      <div className="container">
-        <Switch>
-          <Route exact path="/" component={App} />
-          <Route exact path="/admin/books" component={BookTable} />
-          <Route exact path="/books/:book_id" component={Book} />
-          <Route exact path="/admin/books/:book_id/edit" component={AddBook} />
-          <Route exact path="/admin/books/add" component={AddBook} />
-        </Switch>
-      </div>
-    </Router>
+    <App />
   </Provider>,
   document.getElementById("root")
 );
