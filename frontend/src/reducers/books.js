@@ -8,15 +8,25 @@ import {
 
 const initialState = {
   books: [],
+  page: {
+    count: 0,
+    next: null,
+    previous: null
+  },
   book: null
 };
 
-export const rootReducer = (state = initialState, action) => {
+export default function(state = initialState, action) {
   switch (action.type) {
     case GET_BOOKS:
       return {
         ...state,
-        books: action.payload,
+        books: action.payload.results,
+        page: {
+          count: action.payload.count,
+          next: action.payload.next,
+          previous: action.payload.previous
+        },
         book: null
       };
     case GET_BOOK:
@@ -48,4 +58,4 @@ export const rootReducer = (state = initialState, action) => {
     default:
       return state;
   }
-};
+}

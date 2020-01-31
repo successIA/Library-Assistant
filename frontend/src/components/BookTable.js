@@ -1,26 +1,96 @@
-import React, { Component } from "react";
+import React, { Component, Fragment } from "react";
 import { connect } from "react-redux";
 import { Link } from "react-router-dom";
 import PropTypes from "prop-types";
-import { getBooks, deleteBook } from "../actions/books";
+import { getCurrentPageNumber } from "../utilities/getCurrentPageNumber";
+import Pagination from "./shared/Pagination";
+
+import { getAdminBooks, deleteBook } from "../actions/books";
+import Modal from "./shared/Modal";
+import Loader from "./shared/Loader";
 
 export class BookTable extends Component {
+  defaulModalOptionValues = {
+    heading: "",
+    body: "",
+    actionBtnText: "",
+    closeBtnText: ""
+  };
+
   state = {
-    search: ""
+    search: "",
+    shouldShowModal: false,
+    bookToDeleteId: "",
+    modalOptions: this.defaulModalOptionValues
   };
 
   componentDidMount() {
-    this.props.getBooks();
+    let number = getCurrentPageNumber(this.props.location.search);
+    number ? this.props.getAdminBooks(number) : this.props.getAdminBooks();
+  }
+
+  componentDidUpdate(prevProps) {
+    console.log(this.props);
+    if (!this.props.isAuthenticated) {
+      return this.props.history.push("/");
+    }
+    if (!this.props.books.length && prevProps.books.length) {
+      const { page } = this.props;
+      // if (page.previous) {
+      //   page.previous = page.previous.replace("http://127.0.0.1:8000", "");
+      // }
+      let page_num = Math.ceil((page.count - 1) / 3);
+      this.props.history.push(`/admin/books?page=${page_num}`);
+    }
+    if (
+      getCurrentPageNumber(this.props.location.search) !==
+      getCurrentPageNumber(prevProps.location.search)
+    ) {
+      window.scrollTo(0, 0);
+      let number = getCurrentPageNumber(this.props.location.search);
+      number ? this.props.getAdminBooks(number) : this.props.getAdminBooks();
+    }
   }
 
   static propTypes = {
     books: PropTypes.array.isRequired,
-    getBooks: PropTypes.func.isRequired,
+    getAdminBooks: PropTypes.func.isRequired,
     deleteBook: PropTypes.func.isRequired
   };
 
-  handleDelete = id => {
-    this.props.deleteBook(id);
+  handleDelete = (id, title) => {
+    this.setState({
+      shouldShowModal: true,
+      bookToDeleteId: id,
+      modalOptions: {
+        heading: "Confirm Delete",
+        body: (
+          <Fragment>
+            Are you sure you want to delete: <strong>{title}</strong>
+          </Fragment>
+        ),
+        actionBtnText: "Delete"
+      }
+    });
+  };
+
+  handleModalActionBtn = () => {
+    if (this.state.bookToDeleteId) {
+      this.props.deleteBook(this.state.bookToDeleteId);
+      this.setState({
+        shouldShowModal: false,
+        bookToDeleteId: "",
+        modalOptions: this.defaulModalOptionValues
+      });
+    }
+  };
+
+  handleModalCloseBtn = () => {
+    this.setState({
+      shouldShowModal: false,
+      bookToDeleteId: "",
+      modalOptions: this.defaulModalOptionValues
+    });
   };
 
   handleChange = e => {
@@ -31,6 +101,17 @@ export class BookTable extends Component {
 
   render() {
     let { books } = this.props;
+    const { page } = this.props;
+
+    if (page.next) {
+      page.next = page.next.replace("http://127.0.0.1:8000", "");
+    }
+    if (page.previous) {
+      page.previous = page.previous.replace("http://127.0.0.1:8000", "");
+    }
+    let url = "/admin/books?page=";
+
+    const currentPageNum = getCurrentPageNumber(this.props.location.search);
     if (this.state.search)
       books = books.filter(book =>
         book.title.toLowerCase().includes(this.state.search.toLowerCase())
@@ -38,12 +119,19 @@ export class BookTable extends Component {
     return (
       <div className="row mt-4">
         <div className="col-md-12">
+          <Modal
+            shouldShow={this.state.shouldShowModal}
+            handleActionBtn={this.handleModalActionBtn}
+            handleCloseBtn={this.handleModalCloseBtn}
+            options={this.state.modalOptions}
+          />
           <h2 className="mb-4">Books</h2>
           <div className="row ml-0 mb-0 above-table">
             <Link
               to={"/admin/books/add"}
               className="btn btn-primary text-right mb-4 mr-2"
             >
+              <i className="fa fa-plus mr-1"></i>
               Create New Book
             </Link>
             <form autoComplete="off" className="form-inline my-2 my-lg-0 pb-4">
@@ -78,7 +166,7 @@ export class BookTable extends Component {
               </tr>
             </thead>
             <tbody>
-              {books ? (
+              {books.length ? (
                 books.map(book => {
                   return (
                     <tr key={book.id}>
@@ -118,14 +206,27 @@ export class BookTable extends Component {
                           className="btn btn-sm btn-secondary"
                           to={"/admin/books/" + book.id + "/edit"}
                         >
-                          Update
+                          <i className="fa fa-edit mr-1"></i>Update
                         </Link>
                       </td>
                       <td>
                         <button
                           className="btn btn-sm btn-danger"
-                          onClick={this.handleDelete.bind(this, book.id)}
+                          onClick={this.handleDelete.bind(
+                            this,
+                            book.id,
+                            book.title
+                          )}
                         >
+                          <span>
+                            <i
+                              style={{
+                                fontSize: "1em",
+                                display: "inline-block"
+                              }}
+                              className="fa fa-trash-alt mr-1"
+                            ></i>
+                          </span>
                           Delete
                         </button>
                       </td>
@@ -134,7 +235,7 @@ export class BookTable extends Component {
                 })
               ) : (
                 <tr>
-                  <td>Loading...</td>
+                  <td>{!this.props.books.length ? <Loader /> : ""}</td>
                 </tr>
               )}
             </tbody>
@@ -144,6 +245,7 @@ export class BookTable extends Component {
           ) : (
             ""
           )}
+          <Pagination page={page} currentPageNum={currentPageNum} url={url} />
         </div>
       </div>
     );
@@ -152,11 +254,13 @@ export class BookTable extends Component {
 
 const mapStateToProps = state => {
   return {
-    books: state.books
+    books: state.bookReducer.books,
+    page: state.bookReducer.page,
+    isAuthenticated: state.authReducer.isAuthenticated
   };
 };
 
 export default connect(
   mapStateToProps,
-  { getBooks, deleteBook }
+  { getAdminBooks, deleteBook }
 )(BookTable);

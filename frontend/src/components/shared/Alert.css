@@ -1,0 +1,36 @@
+.b-alert {
+  position: fixed;
+  top: 5.5rem;
+  left: 45%;
+  right: 45%;
+  z-index: 2000;
+  width: 10%;
+  border-radius: 3px;
+  padding: 5px;
+  color: #fff;
+}
+
+.b-alert span {
+  display: inline-block;
+  margin-left: 10px;
+  margin-right: 0;
+  padding: 5px 0;
+}
+
+.b-alert-success {
+  /* background-color: rgb(40, 214, 51); */
+  background-color: #d4edda;
+  color: #6e9d79;
+}
+
+.b-alert-danger {
+  background-color: #f8d7da;
+  color: #975057;
+}
+
+.b-alert ul {
+  padding-left: 0;
+}
+.b-alert ul li {
+  list-style-type: none;
+}

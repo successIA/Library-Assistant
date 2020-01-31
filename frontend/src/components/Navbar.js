@@ -2,6 +2,8 @@
 import React, { Component } from "react";
 import { Link, NavLink, withRouter } from "react-router-dom";
 import axios from "axios";
+import { connect } from "react-redux";
+import { logout } from "../actions/auth";
 import "./Navbar.css";
 
 export class Navbar extends Component {
@@ -24,11 +26,12 @@ export class Navbar extends Component {
     e.target.value.length
       ? axios
           .get("http://127.0.0.1:8000/books?search=" + this.state.search)
-          .then(res =>
+          .then(res => {
+            console.log(res.data);
             this.setState({
-              books: res.data
-            })
-          )
+              books: res.data.results
+            });
+          })
           .catch(err => console.log("There was an searching from the server"))
       : this.setState({
           books: []
@@ -73,6 +76,37 @@ export class Navbar extends Component {
 
   render() {
     const { books } = this.state;
+    const authLinks = (
+      <>
+        <li className="nav-item">
+          <NavLink className="nav-link" to="/admin/books">
+            Manage Books
+          </NavLink>
+        </li>
+        <li className="nav-item">
+          <button
+            className="nav-link btn btn-link btn-sm"
+            onClick={this.props.logout}
+          >
+            Logout
+          </button>
+        </li>
+      </>
+    );
+    const guestLinks = (
+      <>
+        <li className="nav-item">
+          <NavLink className="nav-link" to="/auth/register">
+            Register
+          </NavLink>
+        </li>
+        <li className="nav-item">
+          <NavLink className="nav-link" to="/auth/login">
+            Login
+          </NavLink>
+        </li>
+      </>
+    );
     return (
       <nav className="navbar navbar-expand-lg navbar-dark bg-dark">
         <Link className="navbar-brand" to="/">
@@ -97,47 +131,15 @@ export class Navbar extends Component {
                 Home <span className="sr-only">(current)</span>
               </Link>
             </li>
-            <li className="nav-item">
-              <NavLink className="nav-link" to="/admin/books">
-                Manage Books
-              </NavLink>
-            </li>
-            {/* <li className="nav-item dropdown">
-              <a
-                className="nav-link dropdown-toggle"
-                href="#"
-                id="navbarDropdown"
-                role="button"
-                data-toggle="dropdown"
-                aria-haspopup="true"
-                aria-expanded="false"
-              >
-                Dropdown
-              </a>
-              <div className="dropdown-menu" aria-labelledby="navbarDropdown">
-                <a className="dropdown-item" href="#">
-                  Action
-                </a>
-                <a className="dropdown-item" href="#">
-                  Another action
-                </a>
-                <div className="dropdown-divider"></div>
-                <a className="dropdown-item" href="#">
-                  Something else here
-                </a>
-              </div>
-            </li>
-            <li className="nav-item">
-              <a
-                className="nav-link disabled"
-                href="#"
-                tabIndex="-1"
-                aria-disabled="true"
-              >
-                Disabled
-              </a>
-            </li> */}
+            {this.props.isAuthenticated ? authLinks : guestLinks}
           </ul>
+          {this.props.isAuthenticated ? (
+            <span className="mr-4 text-light">
+              Welcome, {this.props.user.username}
+            </span>
+          ) : (
+            ""
+          )}
           <form autoComplete="off" className="form-inline my-2 my-lg-0">
             <div ref={this.searchDropdownRef} className="search-wrapper">
               <span className="search-icon">
@@ -176,4 +178,12 @@ export class Navbar extends Component {
   }
 }
 
-export default withRouter(Navbar);
+const mapStateToProps = state => ({
+  isAuthenticated: state.authReducer.isAuthenticated,
+  user: state.authReducer.user
+});
+
+export default connect(
+  mapStateToProps,
+  { logout }
+)(withRouter(Navbar));
