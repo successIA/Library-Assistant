@@ -16,7 +16,7 @@ const initialState = {
   book: null
 };
 
-export default function(state = initialState, action) {
+export default function (state = initialState, action) {
   switch (action.type) {
     case GET_BOOKS:
       return {
@@ -32,9 +32,6 @@ export default function(state = initialState, action) {
     case GET_BOOK:
       return {
         ...state,
-        // books: [...state.books].map(book =>
-        //   book.id === action.payload.id ? action.payload : book
-        // ),
         book: action.payload
       };
     case ADD_BOOK:

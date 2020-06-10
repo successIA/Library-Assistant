@@ -93,6 +93,7 @@ export class Navbar extends Component {
         </li>
       </>
     );
+
     const guestLinks = (
       <>
         <li className="nav-item">
@@ -107,6 +108,7 @@ export class Navbar extends Component {
         </li>
       </>
     );
+
     return (
       <nav className="navbar navbar-expand-lg navbar-dark bg-dark">
         <Link className="navbar-brand" to="/">
@@ -140,6 +142,7 @@ export class Navbar extends Component {
           ) : (
             ""
           )}
+          
           <form autoComplete="off" className="form-inline my-2 my-lg-0">
             <div ref={this.searchDropdownRef} className="search-wrapper">
               <span className="search-icon">
