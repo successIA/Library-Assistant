@@ -22,24 +22,21 @@ class RegisterSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ['username', 'password', 'email']
+        write_only_fields = ['password']
 
     def create(self, validated_data):
         username = validated_data['username']
         email = validated_data['email']
         password = validated_data['password']
-        user = User.objects.create_user(
-            username, email, password
-        )
+        user = User.objects.create_user(username, email, password)
         return user
 
 
 class LoginSerializer(serializers.Serializer):
     username = serializers.CharField()
-    password = serializers.CharField()
+    password = serializers.CharField(write_only=True)
 
     def validate(self, data):
-        # **data is the same as username, password being passed as
-        # keyword arguments to authenticate method
         user = authenticate(**data)
         if user and user.is_active:
             return user
